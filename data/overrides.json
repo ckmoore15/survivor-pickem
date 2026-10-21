@@ -1,0 +1,13 @@
+{
+  "_help": [
+    "Manual fixes for when the wiki is late or wrong. Edit on github.com, commit, and the site rebuilds in ~1 minute.",
+    "holdBackAfter: a number forces the site to never show past that episode (emergency spoiler brake). null = off.",
+    "confirmEpisodes: episode numbers to publish even though the wiki hasn't listed who left (e.g. no-elimination episode).",
+    "exits: { \"Full Name\": { \"ep\": 5, \"finish\": \"5th Voted Out\" } } to set or fix when someone left.",
+    "castaways: { \"Full Name\": { ...any field... } } to override wiki data for a castaway."
+  ],
+  "holdBackAfter": null,
+  "confirmEpisodes": [],
+  "exits": {},
+  "castaways": {}
+}

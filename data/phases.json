@@ -1,0 +1,6 @@
+{
+  "_help": "Episode where each tribe phase (column in the wiki castaway table) began. New phases are added automatically at the latest episode; fix here if needed.",
+  "Original Tribe": 1,
+  "Post-Mutiny": 3,
+  "Expanded Tribes": 4
+}

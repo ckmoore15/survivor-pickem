@@ -1,0 +1,11 @@
+{
+  "_help": "Each player and the castaways they drafted. Names must match the wiki exactly (full name).",
+  "players": [
+    { "name": "Connor",  "picks": ["Alexis Levine", "Maggie Nestor", "Cristian Chavez"] },
+    { "name": "Camden",  "picks": ["Devin Way", "Jelly Loblack", "Patt Cannaday"] },
+    { "name": "Kasey",   "picks": ["Linnea Capobianco", "Ori Jean-Charles", "Kristin Flickinger"] },
+    { "name": "Mom",     "picks": ["Carter Krull", "Jenna Doore", "Lewis Kelly"] },
+    { "name": "Dad",     "picks": ["Mike Pinsky", "Sharonda Cox", "Thien An Nguyen"] },
+    { "name": "Kennedy", "picks": ["Ana Sani", "Brady Booker", "Danny Kilby", "Eric Macksoud", "Rob Antonson"], "note": "Got the leftovers" }
+  ]
+}

@@ -1,0 +1,543 @@
+{
+  "season": 51,
+  "revealedThrough": 4,
+  "episodes": [
+    {
+      "num": 1,
+      "title": "Permanent Uncertainty",
+      "airDate": "2026-09-23",
+      "exits": [
+        "Aaliyah Puglia"
+      ]
+    },
+    {
+      "num": 2,
+      "title": "Weaponized Honesty",
+      "airDate": "2026-09-30",
+      "exits": [
+        "Ana Sani"
+      ]
+    },
+    {
+      "num": 3,
+      "title": "What I'm Smellin' Is Stinky",
+      "airDate": "2026-10-07",
+      "exits": [
+        "Rob Antonson",
+        "Patt Cannaday"
+      ]
+    },
+    {
+      "num": 4,
+      "title": "That's the Magic of Survivor",
+      "airDate": "2026-10-14",
+      "exits": [
+        "Jenna Doore"
+      ]
+    },
+    {
+      "num": 5,
+      "airDate": "2026-10-21"
+    }
+  ],
+  "phases": [
+    {
+      "name": "Original Tribe",
+      "start": 1
+    },
+    {
+      "name": "Post-Mutiny",
+      "start": 3
+    },
+    {
+      "name": "Expanded Tribes",
+      "start": 4
+    }
+  ],
+  "tribes": {
+    "toka": {
+      "name": "Toka",
+      "bg": "#FFE225",
+      "fg": "black"
+    },
+    "savu": {
+      "name": "Savu",
+      "bg": "#5E306F",
+      "fg": "white"
+    },
+    "dina": {
+      "name": "Dina",
+      "bg": "#F12650",
+      "fg": "white"
+    }
+  },
+  "castaways": [
+    {
+      "name": "Aaliyah Puglia",
+      "slug": "aaliyah-puglia",
+      "displayName": "Aaliyah",
+      "age": 24,
+      "hometown": "Providence, RI",
+      "job": "Chef",
+      "photo": "img/castaways/aaliyah-puglia.jpg",
+      "tribes": [
+        "toka"
+      ],
+      "finish": "1st Voted Out Day 3",
+      "exitEp": 1,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Confident, wise, sporadic",
+      "fact": ""
+    },
+    {
+      "name": "Ana Sani",
+      "slug": "ana-sani",
+      "displayName": "Ana",
+      "age": 34,
+      "hometown": "Toronto, ON",
+      "job": "Voice Actress",
+      "photo": "img/castaways/ana-sani.jpg",
+      "tribes": [
+        "savu"
+      ],
+      "finish": "2nd Voted Out Day 5",
+      "exitEp": 2,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Goofy, ambitious, chaotic",
+      "fact": "That I have an honors degree in Political Science (specifically Political Theory). I enjoy reading about the dynamics of power and why people in positions of power do what they do."
+    },
+    {
+      "name": "Rob Antonson",
+      "slug": "rob-antonson",
+      "displayName": "Rob",
+      "age": 40,
+      "hometown": "Cumberland, RI",
+      "job": "Airline Gate Agent",
+      "photo": "img/castaways/rob-antonson.jpg",
+      "tribes": [
+        "savu"
+      ],
+      "finish": "Quit Day 6",
+      "exitEp": 3,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Competitive, funny, loving",
+      "fact": "I am a huge reality TV junkie. I watch Real Housewives, Traitors, Love Island, MTV's The Challenge. If it's reality, I've probably watched it. I guess I just like peeping into people's lives from my couch."
+    },
+    {
+      "name": "Patt Cannaday",
+      "slug": "patt-cannaday",
+      "displayName": "Patt",
+      "age": 33,
+      "hometown": "Washington, DC",
+      "job": "Federal Prosecutor",
+      "photo": "img/castaways/patt-cannaday.jpg",
+      "tribes": [
+        "toka",
+        "toka"
+      ],
+      "finish": "3rd Voted Out Day 7",
+      "exitEp": 3,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Goofy, loyal, intense",
+      "fact": "My parents are my biggest inspiration. My mom is a genius, who homeschooled me and my siblings, and my dad was a 26 year Air Force officer, who (in his own words), succeeded primarily based on his good looks."
+    },
+    {
+      "name": "Jenna Doore",
+      "slug": "jenna-doore",
+      "displayName": "Jenna",
+      "age": 30,
+      "hometown": "Toledo, OH",
+      "job": "Wedding Photographer",
+      "photo": "img/castaways/jenna-doore.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "savu"
+      ],
+      "finish": "4th Voted Out Day 9",
+      "exitEp": 4,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Empathetic. Determined. And energetic. (my family's nickname for me is NENERGY)",
+      "fact": "I think I give off \"sweet, bubbly, artistic girl\"... but I've got a savvy strategic side to me!"
+    },
+    {
+      "name": "Alexis Levine",
+      "slug": "alexis-levine",
+      "displayName": "Alexis",
+      "age": 34,
+      "hometown": "Atlanta, GA",
+      "job": "Criminal Defense Attorney",
+      "photo": "img/castaways/alexis-levine.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "savu"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Outgoing, thoughtful, determined",
+      "fact": "I am Iranian – my dad came here when he was 18 and never went back. I hope to visit one day!"
+    },
+    {
+      "name": "Brady Booker",
+      "slug": "brady-booker",
+      "displayName": "Brady",
+      "age": 27,
+      "hometown": "Knoxville, TN",
+      "job": "Pro Wrestler",
+      "photo": "img/castaways/brady-booker.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "toka"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Enthusiastic, intense, fun",
+      "fact": "I did gymnastics throughout my years of youth sports."
+    },
+    {
+      "name": "Carter Krull",
+      "slug": "carter-krull",
+      "displayName": "Carter",
+      "age": 24,
+      "hometown": "Sioux Falls, SD",
+      "job": "Livestock Farmer",
+      "photo": "img/castaways/carter-krull.jpg",
+      "tribes": [
+        "savu",
+        "toka",
+        "toka"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Adventurous, competitive, determined",
+      "fact": "I can make a really weird whistling noise with the back of my throat – not sure why?"
+    },
+    {
+      "name": "Cristian Chavez",
+      "slug": "cristian-chavez",
+      "displayName": "Cristian",
+      "age": 25,
+      "hometown": "Salt Lake City, UT",
+      "job": "Head of HR",
+      "photo": "img/castaways/cristian-chavez.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "dina"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Fun, chaotic, loud",
+      "fact": "I'm a dad, I can be cutthroat when I need to be. I have a very LOUD laugh. I have a very strong aversion to worms."
+    },
+    {
+      "name": "Danny Kilby",
+      "slug": "danny-kilby",
+      "displayName": "Kilby",
+      "age": 30,
+      "hometown": "London, ON",
+      "job": "Game Designer",
+      "photo": "img/castaways/danny-kilby.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "dina"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Wacky, chaotic, playful",
+      "fact": ""
+    },
+    {
+      "name": "Devin Way",
+      "slug": "devin-way",
+      "displayName": "Devin",
+      "age": 33,
+      "hometown": "Los Angeles, CA",
+      "job": "Actor",
+      "photo": "img/castaways/devin-way.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "savu"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Charming, playful, loyal",
+      "fact": "That I have 12 brothers and sisters. I'm number 7 in the group."
+    },
+    {
+      "name": "Eric Macksoud",
+      "slug": "eric-macksoud",
+      "displayName": "Eric",
+      "age": 34,
+      "hometown": "Windsor Locks, CT",
+      "job": "Mental Health Counselor",
+      "photo": "img/castaways/eric-macksoud.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "dina"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Animated, charismatic, empathic",
+      "fact": "You probably couldn't guess that I'm trained in Muay Thai kickboxing, and that I used to be a competitive swimmer from age 8 up until my senior year of college."
+    },
+    {
+      "name": "Jelly Loblack",
+      "slug": "jelly-loblack",
+      "displayName": "Jelly",
+      "age": 29,
+      "hometown": "Bloomington, IN",
+      "job": "Sociology Professor",
+      "photo": "img/castaways/jelly-loblack.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "savu"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Curious, multifaceted, and passionate",
+      "fact": "I once won most comedic mascot at mascot camp (yes, it's a thing). I was Webber the Bear!"
+    },
+    {
+      "name": "Kristin Flickinger",
+      "slug": "kristin-flickinger",
+      "displayName": "Kristin",
+      "age": 49,
+      "hometown": "Santa Barbara, CA",
+      "job": "Crisis Management",
+      "photo": "img/castaways/kristin-flickinger.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "toka"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Determined, joyful",
+      "fact": "I carry rocks in my bra usually for protection, but it changes based on my mood, and any particular meetings I have that day."
+    },
+    {
+      "name": "Lewis Kelly",
+      "slug": "lewis-kelly",
+      "displayName": "Lewis",
+      "age": 28,
+      "hometown": "Corozal, PR",
+      "job": "Farmer",
+      "photo": "img/castaways/lewis-kelly.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "dina"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Cheeky, devilish, charming",
+      "fact": "I feel I’m more intelligent than people take me for. I might sound a bit rough around the edges but on Survivor, every blunder, every mistake I make publicly is probably very thought out and deliberately executed move."
+    },
+    {
+      "name": "Linnea Capobianco",
+      "slug": "linnea-capobianco",
+      "displayName": "Linnea",
+      "age": 25,
+      "hometown": "Jersey City, NJ",
+      "job": "Entrepreneur",
+      "photo": "img/castaways/linnea-capobianco.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "dina"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Rational, outgoing, and optimistic.",
+      "fact": "I have a laughing problem. I've had countless uncontrollable laughing attacks (funerals, church, class, during a presentation, etc). They happen when I know I shouldn't be laughing."
+    },
+    {
+      "name": "Maggie Nestor",
+      "slug": "maggie-nestor",
+      "displayName": "Maggie",
+      "age": 40,
+      "hometown": "Charles Town, WV",
+      "job": "Farmer",
+      "photo": "img/castaways/maggie-nestor.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "toka"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Joyful, intentional, redneck",
+      "fact": "I'm a mom of three AMAZING MARVELOUS children who merit me more love than I deserve."
+    },
+    {
+      "name": "Mike Pinsky",
+      "slug": "mike-pinsky",
+      "displayName": "Mike",
+      "age": 32,
+      "hometown": "New York City, NY",
+      "job": "Baseball Executive",
+      "photo": "img/castaways/mike-pinsky.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "toka"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Enthusiastic, strategic, driven",
+      "fact": "Working for the Yankees, I spend tons of time assessing players from the comfort of a stadium seat or my desk chair. But inside me is a burning desire to be the one playing. I am beyond pumped to hit the beaches of Fiji as a player!"
+    },
+    {
+      "name": "Ori Jean-Charles",
+      "slug": "ori-jean-charles",
+      "displayName": "Ori",
+      "age": 27,
+      "hometown": "Spring Valley, NY",
+      "job": "Personal Trainer",
+      "photo": "img/castaways/ori-jean-charles.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "savu"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Consistent— never too high or too low. I am a rock my family and friends know they can rely on. Anamoly [sic] — I am more than what meets the eye, I have a little edge I am different. Hustler — I will find a way to make it happen!",
+      "fact": "Something you would never know by looking at me is that I used to play the violin. I was pretty good at it. It's funny because I'm not an artist, the arts were never my thing. But somehow, I ended up First Chair in my 6th grade orchestra."
+    },
+    {
+      "name": "Sharonda Cox",
+      "slug": "sharonda-cox",
+      "displayName": "Sharonda",
+      "age": 34,
+      "hometown": "Richmond, KY",
+      "job": "Resident, OBGYN",
+      "photo": "img/castaways/sharonda-cox.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "dina"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Charismatic, resilient, reliable",
+      "fact": "I was first chair in orchestra. I played violin at Disney. I was also a science nerd and loved NASA!"
+    },
+    {
+      "name": "Thien An Nguyen",
+      "slug": "thien-an-nguyen",
+      "displayName": "Thien An",
+      "age": 24,
+      "hometown": "Fort Worth, TX",
+      "job": "Medical Student",
+      "photo": "img/castaways/thien-an-nguyen.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "toka"
+      ],
+      "finish": null,
+      "exitEp": null,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Quick-witted, empathetic, outgoing",
+      "fact": "I am a back-to-back all-around intramural champ."
+    }
+  ],
+  "advantages": [
+    {
+      "castaway": "Devin Way",
+      "name": "Extra Vote",
+      "foundEp": 3,
+      "lostEp": null
+    },
+    {
+      "castaway": "Maggie Nestor",
+      "name": "Extra Vote",
+      "foundEp": 3,
+      "lostEp": null
+    },
+    {
+      "castaway": "Brady Booker",
+      "name": "Extra Vote",
+      "foundEp": 3,
+      "lostEp": 4
+    },
+    {
+      "castaway": "Carter Krull",
+      "name": "Hidden Immunity Idol",
+      "foundEp": 4,
+      "lostEp": null
+    },
+    {
+      "castaway": "Jelly Loblack",
+      "name": "Hidden Immunity Idol",
+      "foundEp": 4,
+      "lostEp": null
+    }
+  ],
+  "updatedAt": "2026-10-21T04:08:08.712Z"
+}

@@ -1,0 +1,35 @@
+{
+  "_help": "Advantage history, maintained automatically: a new 'on hand' advantage on the wiki gets foundEp = latest episode, and one that disappears gets lostEp. Fix episode numbers here if they're off.",
+  "events": [
+    {
+      "castaway": "Devin Way",
+      "name": "Extra Vote",
+      "foundEp": 3,
+      "lostEp": null
+    },
+    {
+      "castaway": "Maggie Nestor",
+      "name": "Extra Vote",
+      "foundEp": 3,
+      "lostEp": null
+    },
+    {
+      "castaway": "Brady Booker",
+      "name": "Extra Vote",
+      "foundEp": 3,
+      "lostEp": 4
+    },
+    {
+      "castaway": "Carter Krull",
+      "name": "Hidden Immunity Idol",
+      "foundEp": 4,
+      "lostEp": null
+    },
+    {
+      "castaway": "Jelly Loblack",
+      "name": "Hidden Immunity Idol",
+      "foundEp": 4,
+      "lostEp": null
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "season": 51,
+  "title": "Survivor 51",
+  "subtitle": "Family Pick 'Em",
+  "wikiPage": "Survivor_51",
+  "pot": "$100 cash",
+  "scoring": {
+    "episode": 1,
+    "jury": 3,
+    "finalTribal": 5,
+    "winner": 10
+  },
+  "revealHourUTC": 11,
+  "airTimeLocal": "8:00 PM"
+}

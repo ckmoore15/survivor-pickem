@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1310">
+  <title>Survivor Pick 'Em</title>
+  <meta name="description" content="Family Survivor pick 'em scoreboard, spoiler-safe.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="brand-flame" aria-hidden="true">🔥</span>
+      <div>
+        <h1 id="title">Survivor</h1>
+        <p class="tagline">Outwit · Outplay · Outlast</p>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#scoreboard" data-tab="scoreboard"><span aria-hidden="true">🏆</span>Scores</a>
+      <a href="#castaways" data-tab="castaways"><span aria-hidden="true">🌴</span>Castaways</a>
+      <a href="#tribes" data-tab="tribes"><span aria-hidden="true">🛶</span>Tribes</a>
+      <a href="#rules" data-tab="rules"><span aria-hidden="true">📜</span>Rules</a>
+    </nav>
+  </header>
+
+  <section class="scrubber" aria-label="Spoiler control">
+    <button class="step" id="ep-prev" aria-label="Previous episode">‹</button>
+    <div class="scrub-mid">
+      <div class="scrub-label">
+        <span class="scrub-kicker">Watched through</span>
+        <strong id="ep-label">Episode 0</strong>
+        <span id="ep-title" class="scrub-title"></span>
+      </div>
+      <input type="range" id="ep-range" min="0" max="0" value="0" aria-label="Episodes watched">
+      <div id="ep-hidden" class="scrub-hidden" hidden></div>
+    </div>
+    <button class="step" id="ep-next" aria-label="Next episode">›</button>
+  </section>
+
+  <main id="view" tabindex="-1">
+    <p class="loading">Lighting the torches…</p>
+  </main>
+
+  <footer class="foot" id="foot"></footer>
+
+  <dialog id="gate" class="gate">
+    <form method="dialog">
+      <div class="gate-flame" aria-hidden="true">🔥</div>
+      <h2>No spoilers here</h2>
+      <p>Which episode have you watched through? The site only shows what's happened up to that point. You can change it any time with the slider at the top.</p>
+      <div id="gate-options" class="gate-options"></div>
+    </form>
+  </dialog>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
