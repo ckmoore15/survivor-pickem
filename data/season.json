@@ -1,6 +1,6 @@
 {
   "season": 51,
-  "revealedThrough": 4,
+  "revealedThrough": 5,
   "episodes": [
     {
       "num": 1,
@@ -37,7 +37,16 @@
     },
     {
       "num": 5,
-      "airDate": "2026-10-21"
+      "title": "Not Here to Get a Pedicure",
+      "airDate": "2026-10-21",
+      "exits": [
+        "Alexis Levine",
+        "Linnea Capobianco"
+      ]
+    },
+    {
+      "num": 6,
+      "airDate": "2026-10-28"
     }
   ],
   "phases": [
@@ -183,13 +192,34 @@
         "savu",
         "savu"
       ],
-      "finish": null,
-      "exitEp": null,
+      "finish": "5th Voted Out Day 10",
+      "exitEp": 5,
       "jury": false,
       "finalist": false,
       "winner": false,
       "words": "Outgoing, thoughtful, determined",
       "fact": "I am Iranian – my dad came here when he was 18 and never went back. I hope to visit one day!"
+    },
+    {
+      "name": "Linnea Capobianco",
+      "slug": "linnea-capobianco",
+      "displayName": "Linnea",
+      "age": 25,
+      "hometown": "Jersey City, NJ",
+      "job": "Entrepreneur",
+      "photo": "img/castaways/linnea-capobianco.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "dina"
+      ],
+      "finish": "6th Voted Out Day 10",
+      "exitEp": 5,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Rational, outgoing, and optimistic.",
+      "fact": "I have a laughing problem. I've had countless uncontrollable laughing attacks (funerals, church, class, during a presentation, etc). They happen when I know I shouldn't be laughing."
     },
     {
       "name": "Brady Booker",
@@ -381,27 +411,6 @@
       "fact": "I feel I’m more intelligent than people take me for. I might sound a bit rough around the edges but on Survivor, every blunder, every mistake I make publicly is probably very thought out and deliberately executed move."
     },
     {
-      "name": "Linnea Capobianco",
-      "slug": "linnea-capobianco",
-      "displayName": "Linnea",
-      "age": 25,
-      "hometown": "Jersey City, NJ",
-      "job": "Entrepreneur",
-      "photo": "img/castaways/linnea-capobianco.jpg",
-      "tribes": [
-        "savu",
-        "savu",
-        "dina"
-      ],
-      "finish": null,
-      "exitEp": null,
-      "jury": false,
-      "finalist": false,
-      "winner": false,
-      "words": "Rational, outgoing, and optimistic.",
-      "fact": "I have a laughing problem. I've had countless uncontrollable laughing attacks (funerals, church, class, during a presentation, etc). They happen when I know I shouldn't be laughing."
-    },
-    {
       "name": "Maggie Nestor",
       "slug": "maggie-nestor",
       "displayName": "Maggie",
@@ -518,7 +527,7 @@
       "castaway": "Maggie Nestor",
       "name": "Extra Vote",
       "foundEp": 3,
-      "lostEp": null
+      "lostEp": 5
     },
     {
       "castaway": "Brady Booker",
@@ -539,5 +548,5 @@
       "lostEp": null
     }
   ],
-  "updatedAt": "2026-10-21T04:08:08.712Z"
+  "updatedAt": "2026-10-22T15:36:43.889Z"
 }
