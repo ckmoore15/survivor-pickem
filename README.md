@@ -4,10 +4,10 @@ A spoiler-safe scoreboard for our family Survivor pool. It's a static site on Gi
 
 ## How it updates
 
-A GitHub Action (`.github/workflows/update.yml`) runs every morning at about 7:30am ET, plus a Thursday afternoon retry. It runs `scripts/update.mjs`, which:
+A GitHub Action (`.github/workflows/update.yml`) runs every 15 minutes on Wednesday night after the West Coast airing, plus daily and Thursday backups. It runs `scripts/update.mjs`, which:
 
 1. Reads the season page and episode guide from the wiki.
-2. Publishes an episode only after **Thursday 11:00 UTC** (the morning after it airs) **and** once the wiki lists who left.
+2. Publishes an episode only after **9:30pm Pacific** on air night (the end of the West Coast airing, set by `reveal` in `config.json`) **and** once the wiki lists who left.
 3. Between an episode airing and being published, it **writes nothing at all**, so new tribes and advantages can't leak early.
 4. Downloads castaway photos, records advantage history, then commits and deploys.
 
@@ -20,7 +20,7 @@ To update by hand: open **Actions → Update from wiki & deploy → Run workflow
 | `picks.json` | Who drafted whom. |
 | `extras.json` | Nicknames and funny notes. **Keep them spoiler-free.** |
 | `config.json` | Scoring values, pot, season and wiki page. |
-| `overrides.json` | Fixes for when the wiki is wrong or late (see `_help` inside). `holdBackAfter` is an emergency spoiler brake. |
+| `overrides.json` | Fixes for when the wiki is wrong or late (see `_help` inside). `holdBackAfter` is an emergency spoiler brake; `revealTimes` delays one episode (use it for a long finale). |
 | `phases.json` | Which episode each tribe phase (swap, merge…) started. New phases are added automatically. |
 | `advantages.json` | Advantage history (found / gone by episode). Kept up to date automatically; fix episode numbers here if needed. |
 

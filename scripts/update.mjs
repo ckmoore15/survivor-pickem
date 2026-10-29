@@ -1,7 +1,7 @@
 // Pulls the current season from the Survivor Fandom wiki and writes data/season.json.
 //
 // Spoiler safety: an episode is only "revealed" once it is past its reveal time
-// (the morning after it airs, so the West Coast has watched) AND the wiki lists
+// (right after the West Coast airing ends, config.reveal) AND the wiki lists
 // who left. While an episode has aired but isn't revealed yet, this script
 // refuses to write anything, so the castaway table (tribes, advantages) can't
 // leak new information early.
@@ -21,6 +21,19 @@ const FORCE = process.argv.includes('--force') || process.env.FORCE === '1';
 const REFRESH_IMAGES = process.argv.includes('--refresh-images');
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
   'August', 'September', 'October', 'November', 'December'];
+
+// UTC timestamp for a wall-clock date + "HH:MM" in an IANA time zone (handles DST).
+// Times past 24:00 roll into the next day, e.g. "25:00" = 1am the next morning.
+function zonedTime(dateStr, hhmm, timeZone) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const [hh, mm] = hhmm.split(':').map(Number);
+  const guess = Date.UTC(y, m - 1, d, hh, mm);
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric',
+  }).formatToParts(new Date(guess)).map(x => [x.type, Number(x.value)]));
+  const asZone = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute);
+  return guess - (asZone - guess);
+}
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const readJson = async (file, fallback) => {
@@ -220,7 +233,10 @@ async function main() {
     if (!ep.airDate) break;
     const [y, m, d] = ep.airDate.split('-').map(Number);
     ep.airStart = Date.UTC(y, m - 1, d, 22);  // 6pm ET, before anyone airs
-    ep.revealAt = Date.UTC(y, m - 1, d + 1, config.revealHourUTC);
+    const reveal = config.reveal || { timeZone: 'America/Los_Angeles', time: '21:30' };
+    const revealOverride = (overrides.revealTimes || {})[ep.num];
+    ep.revealAt = revealOverride ? Date.parse(revealOverride)
+      : zonedTime(ep.airDate, reveal.time, reveal.timeZone);
     const confirmed = ep.exits.length > 0 || confirm.has(ep.num) || manualExitEps.has(ep.num);
     if (now >= ep.revealAt && confirmed) { revealedThrough = ep.num; continue; }
     if (now >= ep.airStart) blackout = ep;

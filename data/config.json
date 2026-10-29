@@ -10,6 +10,9 @@
     "finalTribal": 5,
     "winner": 10
   },
-  "revealHourUTC": 11,
-  "airTimeLocal": "8:00 PM"
+  "airTimeLocal": "8:00 PM",
+  "reveal": {
+    "timeZone": "America/Los_Angeles",
+    "time": "21:30"
+  }
 }

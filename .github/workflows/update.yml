@@ -2,8 +2,10 @@ name: Update from wiki & deploy
 
 on:
   schedule:
-    - cron: '30 11 * * *'   # daily, 7:30am EDT / 6:30am EST (after the West Coast has watched)
-    - cron: '0 17 * * 4'    # Thursday retry in case the wiki was slow
+    # Times are UTC. Reveal is 9:30pm PT Wednesday = 04:30 UTC Thursday (05:30 in winter).
+    - cron: '*/15 4-8 * * 4'  # Wed night: every 15 min, 04:00-08:45 UTC (9pm-1:45am PDT / 8pm-12:45am PST)
+    - cron: '0 10-18/2 * * 4' # Thursday backups every 2 hours
+    - cron: '30 11 * * *'     # daily catch-all
   workflow_dispatch:        # "Run workflow" button on the Actions tab
   push:
     branches: [main]

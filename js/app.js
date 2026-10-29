@@ -276,7 +276,7 @@
 
       <h3>No spoilers</h3>
       <ul>
-        <li>Survivor airs Wednesdays at ${esc(D.config.airTimeLocal)} in every time zone. Results don't post until <b>Thursday morning</b>, after the West Coast has watched.</li>
+        <li>Survivor airs Wednesdays at ${esc(D.config.airTimeLocal)} in every time zone. Results post Wednesday night, <b>right after the West Coast airing ends</b> (9:30pm Pacific).</li>
         <li>Behind on episodes? Use the slider at the top to set the last episode you've watched. The whole site (scores, tribes, advantages, who's out) rewinds to that point.</li>
         <li>Your phone remembers where you left off, and it never jumps ahead on its own.</li>
       </ul>
@@ -313,7 +313,7 @@
     const next = D.season.episodes.find(e => e.num > D.max && e.airDate);
     const updated = D.season.updatedAt ? new Date(D.season.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
     $('#foot').innerHTML = `
-      ${next ? `<p>📺 <b>Next:</b> Episode ${next.num} airs ${esc(fmtDate(next.airDate))}, ${esc(D.config.airTimeLocal)} local. Scores post Thursday morning.</p>` : ''}
+      ${next ? `<p>📺 <b>Next:</b> Episode ${next.num} airs ${esc(fmtDate(next.airDate))}, ${esc(D.config.airTimeLocal)} local. Scores post right after the West Coast airing.</p>` : ''}
       <p>Data from the <a href="https://survivor.fandom.com/wiki/${esc(D.config.wikiPage)}" target="_blank" rel="noopener">Survivor Wiki</a>${updated ? ` · updated ${esc(updated)}` : ''}</p>`;
   }
 

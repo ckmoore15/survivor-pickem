@@ -4,10 +4,12 @@
     "holdBackAfter: a number forces the site to never show past that episode (emergency spoiler brake). null = off.",
     "confirmEpisodes: episode numbers to publish even though the wiki hasn't listed who left (e.g. no-elimination episode).",
     "exits: { \"Full Name\": { \"ep\": 5, \"finish\": \"5th Voted Out\" } } to set or fix when someone left.",
-    "castaways: { \"Full Name\": { ...any field... } } to override wiki data for a castaway."
+    "castaways: { \"Full Name\": { ...any field... } } to override wiki data for a castaway.",
+    "revealTimes: { \"13\": \"2026-12-17T08:00:00Z\" } to post a specific episode later than normal (e.g. a long finale that runs past 9:30pm PT)."
   ],
   "holdBackAfter": null,
   "confirmEpisodes": [],
   "exits": {},
-  "castaways": {}
+  "castaways": {},
+  "revealTimes": {}
 }
