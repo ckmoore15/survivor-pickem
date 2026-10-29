@@ -1,6 +1,6 @@
 {
   "season": 51,
-  "revealedThrough": 5,
+  "revealedThrough": 6,
   "episodes": [
     {
       "num": 1,
@@ -46,7 +46,15 @@
     },
     {
       "num": 6,
-      "airDate": "2026-10-28"
+      "title": "I Love Crying",
+      "airDate": "2026-10-28",
+      "exits": [
+        "Ori Jean-Charles"
+      ]
+    },
+    {
+      "num": 7,
+      "airDate": "2026-11-04"
     }
   ],
   "phases": [
@@ -61,6 +69,10 @@
     {
       "name": "Expanded Tribes",
       "start": 4
+    },
+    {
+      "name": "Merged Tribe",
+      "start": 6
     }
   ],
   "tribes": {
@@ -220,6 +232,27 @@
       "winner": false,
       "words": "Rational, outgoing, and optimistic.",
       "fact": "I have a laughing problem. I've had countless uncontrollable laughing attacks (funerals, church, class, during a presentation, etc). They happen when I know I shouldn't be laughing."
+    },
+    {
+      "name": "Ori Jean-Charles",
+      "slug": "ori-jean-charles",
+      "displayName": "Ori",
+      "age": 27,
+      "hometown": "Spring Valley, NY",
+      "job": "Personal Trainer",
+      "photo": "img/castaways/ori-jean-charles.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "savu"
+      ],
+      "finish": "7th Voted Out Day 12",
+      "exitEp": 6,
+      "jury": false,
+      "finalist": false,
+      "winner": false,
+      "words": "Consistent— never too high or too low. I am a rock my family and friends know they can rely on. Anamoly [sic] — I am more than what meets the eye, I have a little edge I am different. Hustler — I will find a way to make it happen!",
+      "fact": "Something you would never know by looking at me is that I used to play the violin. I was pretty good at it. It's funny because I'm not an artist, the arts were never my thing. But somehow, I ended up First Chair in my 6th grade orchestra."
     },
     {
       "name": "Brady Booker",
@@ -453,27 +486,6 @@
       "fact": "Working for the Yankees, I spend tons of time assessing players from the comfort of a stadium seat or my desk chair. But inside me is a burning desire to be the one playing. I am beyond pumped to hit the beaches of Fiji as a player!"
     },
     {
-      "name": "Ori Jean-Charles",
-      "slug": "ori-jean-charles",
-      "displayName": "Ori",
-      "age": 27,
-      "hometown": "Spring Valley, NY",
-      "job": "Personal Trainer",
-      "photo": "img/castaways/ori-jean-charles.jpg",
-      "tribes": [
-        "savu",
-        "savu",
-        "savu"
-      ],
-      "finish": null,
-      "exitEp": null,
-      "jury": false,
-      "finalist": false,
-      "winner": false,
-      "words": "Consistent— never too high or too low. I am a rock my family and friends know they can rely on. Anamoly [sic] — I am more than what meets the eye, I have a little edge I am different. Hustler — I will find a way to make it happen!",
-      "fact": "Something you would never know by looking at me is that I used to play the violin. I was pretty good at it. It's funny because I'm not an artist, the arts were never my thing. But somehow, I ended up First Chair in my 6th grade orchestra."
-    },
-    {
       "name": "Sharonda Cox",
       "slug": "sharonda-cox",
       "displayName": "Sharonda",
@@ -521,7 +533,7 @@
       "castaway": "Devin Way",
       "name": "Extra Vote",
       "foundEp": 3,
-      "lostEp": null
+      "lostEp": 6
     },
     {
       "castaway": "Maggie Nestor",
@@ -539,14 +551,14 @@
       "castaway": "Carter Krull",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": null
+      "lostEp": 6
     },
     {
       "castaway": "Jelly Loblack",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": null
+      "lostEp": 6
     }
   ],
-  "updatedAt": "2026-10-22T15:36:43.889Z"
+  "updatedAt": "2026-10-29T06:17:22.826Z"
 }

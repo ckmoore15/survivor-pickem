@@ -5,7 +5,7 @@
       "castaway": "Devin Way",
       "name": "Extra Vote",
       "foundEp": 3,
-      "lostEp": null
+      "lostEp": 6
     },
     {
       "castaway": "Maggie Nestor",
@@ -23,13 +23,13 @@
       "castaway": "Carter Krull",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": null
+      "lostEp": 6
     },
     {
       "castaway": "Jelly Loblack",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": null
+      "lostEp": 6
     }
   ]
 }
