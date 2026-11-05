@@ -1,6 +1,6 @@
 {
   "season": 51,
-  "revealedThrough": 6,
+  "revealedThrough": 7,
   "episodes": [
     {
       "num": 1,
@@ -54,7 +54,15 @@
     },
     {
       "num": 7,
-      "airDate": "2026-11-04"
+      "title": "The Girl at the Prom",
+      "airDate": "2026-11-04",
+      "exits": [
+        "Brady Booker"
+      ]
+    },
+    {
+      "num": 8,
+      "airDate": "2026-11-11"
     }
   ],
   "phases": [
@@ -89,6 +97,11 @@
     "dina": {
       "name": "Dina",
       "bg": "#F12650",
+      "fg": "white"
+    },
+    "tovuto": {
+      "name": "Tovuto",
+      "bg": "#0c41a6",
       "fg": "white"
     }
   },
@@ -265,11 +278,12 @@
       "tribes": [
         "toka",
         "toka",
-        "toka"
+        "toka",
+        "tovuto"
       ],
-      "finish": null,
-      "exitEp": null,
-      "jury": false,
+      "finish": "8th Voted Out 1st Jury Member Day 14",
+      "exitEp": 7,
+      "jury": true,
       "finalist": false,
       "winner": false,
       "words": "Enthusiastic, intense, fun",
@@ -560,5 +574,5 @@
       "lostEp": 6
     }
   ],
-  "updatedAt": "2026-10-29T06:17:22.826Z"
+  "updatedAt": "2026-11-05T11:51:18.882Z"
 }
