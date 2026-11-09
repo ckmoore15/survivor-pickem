@@ -95,8 +95,8 @@
     const t = tribe(id);
     return `<span class="chip tribe" style="background:${esc(t.bg)};color:${esc(t.fg)}">${esc(t.name)}</span>`;
   };
-  function avatar(c, n, size = '') {
-    const color = tribe(tribeAt(c, n)).bg;
+  function avatar(c, n, size = '', tribeId = tribeAt(c, n)) {
+    const color = tribe(tribeId).bg;
     const style = `style="--tribe:${esc(color)}"`;
     return c.photo
       ? `<img class="av ${size}" ${style} src="${esc(c.photo)}" alt="" loading="lazy">`
@@ -227,45 +227,55 @@
   }
 
   function viewTribes(n) {
-    const active = D.season.castaways.filter(c => !isOut(c, n));
-    const groups = {};
-    for (const c of active) (groups[tribeAt(c, n)] ||= []).push(c);
-    const order = Object.keys(D.season.tribes).filter(id => groups[id]);
+    // Every tribe phase that has started by episode n, newest first (the scrubber
+    // hides phases that haven't happened yet). Members are whoever was in that
+    // tribe during the phase; anyone out by episode n is greyed out.
+    const phases = D.season.phases
+      .map((p, i) => ({ ...p, i }))
+      .filter(p => p.start <= Math.max(n, 1));
+    const current = phases[phases.length - 1];
 
-    const formerTribe = c => {
-      const hist = tribeHistory(c, n);
-      return hist.length > 1 ? hist[hist.length - 2] : null;
+    const formerTribe = (c, i) => {
+      for (let j = i - 1; j >= 0; j--) if (c.tribes[j] && c.tribes[j] !== c.tribes[i]) return c.tribes[j];
+      return null;
     };
-    const member = c => {
-      const prev = formerTribe(c);
-      return `<div class="member">${avatar(c, n)}<b>${esc(c.displayName)}</b>
-      <span>${c.owner ? esc(c.owner) : 'Undrafted'}${advantagesAt(c, n).length ? ' ' + advantagesAt(c, n).map(a => advIcon(a.name)).join('') : ''}</span>
+    const member = (c, p) => {
+      const out = isOut(c, n);
+      const prev = p === current ? formerTribe(c, p.i) : null;
+      const advs = out ? [] : advantagesAt(c, n);
+      return `<div class="member ${out ? 'is-out' : ''}">${avatar(c, n, '', c.tribes[p.i])}<b>${esc(c.displayName)}</b>
+      <span>${out ? `Out Ep ${c.exitEp} · ` : ''}${c.owner ? esc(c.owner) : 'Undrafted'}${advs.length ? ' ' + advs.map(a => advIcon(a.name)).join('') : ''}</span>
       ${prev ? `<span class="former"><i style="background:${esc(tribe(prev).bg)}"></i>ex-${esc(tribe(prev).name)}</span>` : ''}</div>`;
     };
 
-    const cards = order.map(id => {
-      const t = tribe(id);
-      const members = groups[id].sort((a, b) => a.displayName.localeCompare(b.displayName));
-      return `<section class="card tribe-card">
-        <header style="background:${esc(t.bg)};color:${esc(t.fg)}"><h3>${esc(t.name)}</h3><span>${plural(members.length, 'castaway')}</span></header>
-        <div class="tribe-members">${members.map(member).join('')}</div>
-      </section>`;
-    }).join('');
+    const phaseSection = (p, idx) => {
+      const groups = {};
+      for (const c of D.season.castaways) if (c.tribes[p.i]) (groups[c.tribes[p.i]] ||= []).push(c);
+      const order = Object.keys(D.season.tribes).filter(id => groups[id]);
+      const next = phases[idx + 1];
+      const range = p === current
+        ? (n === 0 ? 'Starting tribes' : `Episode ${p.start}${n > p.start ? `–${n}` : ''}`)
+        : `Episode ${p.start}${next.start - 1 > p.start ? `–${next.start - 1}` : ''}`;
+      const cards = order.map(id => {
+        const t = tribe(id);
+        const members = groups[id].sort((a, b) =>
+          isOut(a, n) - isOut(b, n) || a.displayName.localeCompare(b.displayName));
+        const alive = members.filter(c => !isOut(c, n)).length;
+        return `<section class="card tribe-card">
+          <header style="background:${esc(t.bg)};color:${esc(t.fg)}"><h3>${esc(t.name)}</h3>
+            <span>${p === current ? `${alive} of ${members.length} still in` : plural(members.length, 'castaway')}</span></header>
+          <div class="tribe-members">${members.map(c => member(c, p)).join('')}</div>
+        </section>`;
+      }).join('');
+      return `<h2 class="section-title"${p === current ? ' style="margin-top:4px"' : ''}>${esc(p.name)} <span class="muted phase-range">· ${range}</span></h2>
+        <div class="tribes">${cards}</div>`;
+    };
 
-    const gone = D.season.castaways.filter(c => isOut(c, n)).sort((a, b) => b.exitEp - a.exitEp);
-    const phases = D.season.phases.filter(p => p.start <= Math.max(n, 1));
-
-    return `<h2 class="section-title" style="margin-top:4px">${n === 0 ? 'Starting tribes' : `Tribes after Episode ${n}`}</h2>
-      <div class="tribes">${cards}</div>
-      ${gone.length ? `<h2 class="section-title">Snuffed out</h2>
-        <div class="card tribe-card"><div class="tribe-members">
-          ${gone.map(c => `<div class="member is-out">${avatar(c, n)}<b>${esc(c.displayName)}</b><span>Ep ${c.exitEp} · ${esc(c.owner || 'Undrafted')}</span></div>`).join('')}
-        </div></div>` : ''}
+    return `${phases.map(phaseSection).reverse().join('')}
       <h2 class="section-title">Tribe timeline</h2>
       <div class="card"><ol class="timeline">
         ${phases.map(p => {
-          const i = D.season.phases.indexOf(p);
-          const ids = [...new Set(D.season.castaways.map(c => c.tribes[i]).filter(Boolean))];
+          const ids = [...new Set(D.season.castaways.map(c => c.tribes[p.i]).filter(Boolean))];
           return `<li><strong>${esc(p.name)}</strong> <span class="muted">· from Episode ${p.start}</span>
             <div class="chips" style="margin-top:4px">${ids.map(tribeChip).join('')}</div></li>`;
         }).join('')}

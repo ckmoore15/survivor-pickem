@@ -231,6 +231,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 16px; outline: none; }
 .member .av { width: 60px; height: 60px; margin: 0 auto 4px; }
 .member b { display: block; font-size: 13px; }
 .member span { color: var(--muted); font-size: 11px; }
+.member.is-out b { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--torch); }
+.section-title .phase-range { font-size: 0.7em; font-weight: 500; letter-spacing: 0; }
 .member .former { display: block; margin-top: 2px; font-size: 10px; }
 .member .former i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; vertical-align: 0; }
 .timeline { list-style: none; margin: 0; padding: 4px 14px; }
