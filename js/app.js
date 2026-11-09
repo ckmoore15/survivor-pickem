@@ -40,12 +40,21 @@
 
   const isOut = (c, n) => c.exitEp != null && c.exitEp <= n;
 
+  // Episode the first juror left in (jury phase has started), or null.
+  function juryStart(n) {
+    const eps = D.season.castaways.filter(c => c.jury && isOut(c, n)).map(c => c.exitEp);
+    return eps.length ? Math.min(...eps) : null;
+  }
+
+  // Made the jury: a juror, a finalist, or still in the game once the jury has started.
+  const madeJury = (c, n) => isOut(c, n) ? (c.jury || c.finalist) : juryStart(n) != null;
+
   function points(c, n) {
     const s = D.config.scoring;
     const out = isOut(c, n);
     const episodes = out ? (c.finalist ? c.exitEp : c.exitEp - 1) : n;
     let bonus = 0;
-    if (out && c.jury) bonus += s.jury;
+    if (madeJury(c, n)) bonus += s.jury;
     if (out && c.finalist) bonus += s.finalTribal;
     if (out && c.winner) bonus += s.winner;
     return { episodes: episodes * s.episode, bonus, total: episodes * s.episode + bonus };
@@ -223,8 +232,16 @@
     for (const c of active) (groups[tribeAt(c, n)] ||= []).push(c);
     const order = Object.keys(D.season.tribes).filter(id => groups[id]);
 
-    const member = c => `<div class="member">${avatar(c, n)}<b>${esc(c.displayName)}</b>
-      <span>${c.owner ? esc(c.owner) : 'Undrafted'}${advantagesAt(c, n).length ? ' ' + advantagesAt(c, n).map(a => advIcon(a.name)).join('') : ''}</span></div>`;
+    const formerTribe = c => {
+      const hist = tribeHistory(c, n);
+      return hist.length > 1 ? hist[hist.length - 2] : null;
+    };
+    const member = c => {
+      const prev = formerTribe(c);
+      return `<div class="member">${avatar(c, n)}<b>${esc(c.displayName)}</b>
+      <span>${c.owner ? esc(c.owner) : 'Undrafted'}${advantagesAt(c, n).length ? ' ' + advantagesAt(c, n).map(a => advIcon(a.name)).join('') : ''}</span>
+      ${prev ? `<span class="former"><i style="background:${esc(tribe(prev).bg)}"></i>ex-${esc(tribe(prev).name)}</span>` : ''}</div>`;
+    };
 
     const cards = order.map(id => {
       const t = tribe(id);
@@ -246,7 +263,12 @@
         </div></div>` : ''}
       <h2 class="section-title">Tribe timeline</h2>
       <div class="card"><ol class="timeline">
-        ${phases.map(p => `<li><strong>${esc(p.name)}</strong> <span class="muted">· from Episode ${p.start}</span></li>`).join('')}
+        ${phases.map(p => {
+          const i = D.season.phases.indexOf(p);
+          const ids = [...new Set(D.season.castaways.map(c => c.tribes[i]).filter(Boolean))];
+          return `<li><strong>${esc(p.name)}</strong> <span class="muted">· from Episode ${p.start}</span>
+            <div class="chips" style="margin-top:4px">${ids.map(tribeChip).join('')}</div></li>`;
+        }).join('')}
       </ol></div>`;
   }
 
@@ -260,7 +282,7 @@
       <h3>Scoring</h3>
       <div class="score-grid">
         <div class="score-tile"><strong>${s.episode}</strong><span>per episode survived</span></div>
-        <div class="score-tile"><strong>+${s.jury}</strong><span>makes the jury</span></div>
+        <div class="score-tile"><strong>+${s.jury}</strong><span>makes the jury phase</span></div>
         <div class="score-tile"><strong>+${s.finalTribal}</strong><span>makes Final Tribal</span></div>
         <div class="score-tile"><strong>+${s.winner}</strong><span>Sole Survivor</span></div>
       </div>
@@ -268,7 +290,8 @@
         <li>Your castaway earns a point for every episode they make it through.</li>
         <li>No point for the episode they leave in, whether that's a vote, a quit, a medevac or losing at fire.</li>
         <li>Example: 3 castaways through Episode 3 = 9 points. If one goes home in Episode 3, that's 8.</li>
-        <li>Jury, Final Tribal and winner bonuses are added when it happens.</li>
+        <li>Jury bonus: once the first juror is voted out, everyone still in the game has made the jury phase and gets the bonus right away. Pre-jury boots don't.</li>
+        <li>Final Tribal and winner bonuses are added when it happens.</li>
       </ul>
 
       <h3>The prize</h3>
@@ -276,7 +299,8 @@
 
       <h3>No spoilers</h3>
       <ul>
-        <li>Survivor airs Wednesdays at ${esc(D.config.airTimeLocal)} in every time zone. Results post Wednesday night, <b>right after the West Coast airing ends</b> (9:30pm Pacific).</li>
+        <li>Survivor airs Wednesdays at ${esc(D.config.airTimeLocal)} in every time zone. Results post Wednesday night as soon as the wiki has them, <b>right after the East Coast airing ends</b> (9:30pm Eastern).</li>
+        <li>On the West Coast? The site won't spoil you. It stays on the last episode you marked as watched until you move the slider.</li>
         <li>Behind on episodes? Use the slider at the top to set the last episode you've watched. The whole site (scores, tribes, advantages, who's out) rewinds to that point.</li>
         <li>Your phone remembers where you left off, and it never jumps ahead on its own.</li>
       </ul>
@@ -313,7 +337,7 @@
     const next = D.season.episodes.find(e => e.num > D.max && e.airDate);
     const updated = D.season.updatedAt ? new Date(D.season.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
     $('#foot').innerHTML = `
-      ${next ? `<p>📺 <b>Next:</b> Episode ${next.num} airs ${esc(fmtDate(next.airDate))}, ${esc(D.config.airTimeLocal)} local. Scores post right after the West Coast airing.</p>` : ''}
+      ${next ? `<p>📺 <b>Next:</b> Episode ${next.num} airs ${esc(fmtDate(next.airDate))}, ${esc(D.config.airTimeLocal)} local. Scores post right after the East Coast airing (9:30pm ET).</p>` : ''}
       <p>Data from the <a href="https://survivor.fandom.com/wiki/${esc(D.config.wikiPage)}" target="_blank" rel="noopener">Survivor Wiki</a>${updated ? ` · updated ${esc(updated)}` : ''}</p>`;
   }
 

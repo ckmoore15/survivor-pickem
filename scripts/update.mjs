@@ -1,12 +1,12 @@
 // Pulls the current season from the Survivor Fandom wiki and writes data/season.json.
 //
 // Spoiler safety: an episode is only "revealed" once it is past its reveal time
-// (right after the West Coast airing ends, config.reveal) AND the wiki lists
-// who left. While an episode has aired but isn't revealed yet, this script
+// (right after the East Coast airing ends, config.reveal) AND the wiki lists
+// who left. West Coast viewers are protected by the "watched through" slider. While an episode has aired but isn't revealed yet, this script
 // refuses to write anything, so the castaway table (tribes, advantages) can't
 // leak new information early.
 //
-// Usage: node scripts/update.mjs [--force] [--refresh-images]
+// Usage: node scripts/update.mjs [--force] [--refresh-images] [--wait=MINUTES]
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -19,6 +19,8 @@ const API = 'https://survivor.fandom.com/api.php';
 const UA = 'survivor-pickem-bot/1.0 (family pick em site)';
 const FORCE = process.argv.includes('--force') || process.env.FORCE === '1';
 const REFRESH_IMAGES = process.argv.includes('--refresh-images');
+const WAIT_MIN = Number((process.argv.find(a => a.startsWith('--wait=')) || '').slice(7)) || 0;
+const POLL_MS = 3 * 60_000;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
   'August', 'September', 'October', 'November', 'December'];
 
@@ -98,11 +100,28 @@ function parseCastaways(wt) {
     .filter(Boolean);
 
   const castaways = [];
+  // Cells with rowspan="N" (e.g. the merged tribe) appear once and stretch down
+  // the next N-1 rows, which omit that cell. Track them by column.
+  const spans = {};
   for (const row of rows) {
     const nameMatch = row.match(/'''\[\[([^\]|]+)(?:\|[^\]]*)?\]\]'''/);
     if (!nameMatch || !row.includes('[[File:')) continue;
     const lines = row.split('\n').filter(l => l.startsWith('|') && !l.startsWith('|}'));
     const nameIdx = lines.findIndex(l => l.includes(nameMatch[0]));
+    const cells = [];
+    let col = 0;
+    const fillSpans = () => {
+      while (spans[col]?.left > 0) { spans[col].left--; cells.push(spans[col].text); col++; }
+    };
+    for (const raw of lines.slice(nameIdx + 1)) {
+      fillSpans();
+      const rs = raw.match(/rowspan\s*=\s*"?(\d+)"?\s*/i);
+      const cell = rs ? raw.replace(rs[0], '') : raw;
+      if (rs && Number(rs[1]) > 1) spans[col] = { text: cell, left: Number(rs[1]) - 1 };
+      cells.push(cell);
+      col++;
+    }
+    fillSpans();
     const small = row.match(/<small>\s*(\d+),\s*([^<]+?)<br\s*\/?>([\s\S]+?)<\/small>/);
     const c = {
       name: nameMatch[1].trim(),
@@ -114,7 +133,7 @@ function parseCastaways(wt) {
       finish: null,
       advantages: [],
     };
-    for (const cell of lines.slice(nameIdx + 1)) {
+    for (const cell of cells) {
       if (/\{\{tribebox\|yes\|/i.test(cell)) {
         const inner = cell
           .replace(/\{\{yn\|.\}\}/gi, '')
@@ -208,14 +227,8 @@ function matchesName(exitName, c) {
   return n === e || n.split(' ').includes(e) || n.startsWith(e + ' ') || e.startsWith(n.split(' ')[0] + ' ');
 }
 
-async function main() {
-  const config = await readJson('config.json');
-  const overrides = await readJson('overrides.json', {});
-  const extras = await readJson('extras.json', {});
-  const phaseStarts = await readJson('phases.json', {});
-  const advLog = await readJson('advantages.json', { events: [] });
-  const now = Date.now();
-
+// Reads the wiki and works out which episodes are safe to show.
+async function fetchSeason(config, overrides) {
   console.log(`Fetching ${config.wikiPage}...`);
   const seasonWt = await wikitext(config.wikiPage);
   const guideWt = await wikitext(`Template:S${config.season}epguide`);
@@ -224,29 +237,57 @@ async function main() {
   console.log(`Parsed ${castaways.length} castaways, ${episodes.length} episodes, phases: ${phases.join(' / ')}`);
   if (castaways.length < 10) throw new Error('Castaway table parse looks wrong, refusing to write.');
 
-  // Which episodes are safe to show?
+  const now = Date.now();
   const confirm = new Set(overrides.confirmEpisodes || []);
   const manualExitEps = new Set(Object.values(overrides.exits || {}).map(x => x.ep));
+  const reveal = config.reveal || { timeZone: 'America/New_York', time: '21:30' };
   let revealedThrough = 0;
   let blackout = null;
   for (const ep of episodes.sort((a, b) => a.num - b.num)) {
     if (!ep.airDate) break;
     const [y, m, d] = ep.airDate.split('-').map(Number);
-    ep.airStart = Date.UTC(y, m - 1, d, 22);  // 6pm ET, before anyone airs
-    const reveal = config.reveal || { timeZone: 'America/Los_Angeles', time: '21:30' };
+    ep.airStart = Date.UTC(y, m - 1, d, 22);  // 5-6pm ET, before anyone airs
     const revealOverride = (overrides.revealTimes || {})[ep.num];
     ep.revealAt = revealOverride ? Date.parse(revealOverride)
       : zonedTime(ep.airDate, reveal.time, reveal.timeZone);
-    const confirmed = ep.exits.length > 0 || confirm.has(ep.num) || manualExitEps.has(ep.num);
+    // Wiki editors update the episode guide and the castaway table separately.
+    // Wait (up to 2 hours) until the table also shows who left, so we don't post
+    // a half-updated episode.
+    const tableReady = ep.exits.every(x => castaways.some(c => c.finish && matchesName(x, c)));
+    const fromWiki = ep.exits.length > 0 && (tableReady || now >= ep.revealAt + 2 * 3600_000);
+    const confirmed = fromWiki || confirm.has(ep.num) || manualExitEps.has(ep.num);
     if (now >= ep.revealAt && confirmed) { revealedThrough = ep.num; continue; }
     if (now >= ep.airStart) blackout = ep;
     break;
   }
   if (overrides.holdBackAfter != null) revealedThrough = Math.min(revealedThrough, overrides.holdBackAfter);
-  if (blackout && !FORCE) {
-    console.log(`Episode ${blackout.num} has aired but isn't revealed yet (reveal ${new Date(blackout.revealAt).toISOString()}, wiki exits: ${blackout.exits.join(', ') || 'none yet'}). Not writing anything.`);
-    return;
+  return { phases, castaways, episodes, revealedThrough, blackout };
+}
+
+async function main() {
+  const config = await readJson('config.json');
+  const overrides = await readJson('overrides.json', {});
+  const extras = await readJson('extras.json', {});
+  const phaseStarts = await readJson('phases.json', {});
+  const advLog = await readJson('advantages.json', { events: [] });
+
+  // --wait=MINUTES: if an episode has aired but isn't revealed yet, keep checking
+  // the wiki until it is (or time runs out) instead of giving up right away.
+  const waitDeadline = Date.now() + WAIT_MIN * 60_000;
+  let snap;
+  for (;;) {
+    snap = await fetchSeason(config, overrides);
+    const b = snap.blackout;
+    if (!b || FORCE) break;
+    const msg = `Episode ${b.num} has aired but isn't revealed yet (reveal ${new Date(b.revealAt).toISOString()}, wiki exits: ${b.exits.join(', ') || 'none yet'}).`;
+    const nowMs = Date.now();
+    const next = nowMs < b.revealAt ? b.revealAt + 30_000 : nowMs + POLL_MS;
+    if (next > waitDeadline) { console.log(`${msg} Not writing anything.`); return; }
+    console.log(`${msg} Checking again at ${new Date(next).toISOString()}.`);
+    await sleep(next - nowMs);
   }
+  const { phases, castaways, episodes, revealedThrough } = snap;
+  const now = Date.now();
   console.log(`Revealed through episode ${revealedThrough}`);
 
   // Episode titles
@@ -270,8 +311,12 @@ async function main() {
     };
   });
 
-  // New tribe phases start at the latest revealed episode
-  for (const p of phases) if (!(p in phaseStarts)) phaseStarts[p] = Math.max(1, revealedThrough);
+  // New tribe phases start at the latest revealed episode. Skip columns the wiki
+  // has added but not filled in yet, so a phase isn't dated an episode early.
+  phases.forEach((p, i) => {
+    if (!(p in phaseStarts) && castaways.some(c => c.tribes[i]))
+      phaseStarts[p] = Math.max(1, revealedThrough);
+  });
 
   // Castaway pages: profile + portrait
   for (const c of castaways) {
@@ -340,7 +385,7 @@ async function main() {
       ? { num: e.num, title: e.title || null, airDate: e.airDate,
           exits: out.filter(c => c.exitEp === e.num).map(c => c.name) }
       : { num: e.num, airDate: e.airDate }),
-    phases: phases.map(name => ({ name, start: phaseStarts[name] })),
+    phases: phases.filter(name => phaseStarts[name] != null).map(name => ({ name, start: phaseStarts[name] })),
     tribes,
     castaways: out,
     advantages: advLog.events.filter(e => e.foundEp <= revealedThrough),

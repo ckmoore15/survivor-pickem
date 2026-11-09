@@ -80,7 +80,7 @@
     },
     {
       "name": "Merged Tribe",
-      "start": 6
+      "start": 7
     }
   ],
   "tribes": {
@@ -300,7 +300,8 @@
       "tribes": [
         "savu",
         "toka",
-        "toka"
+        "toka",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -321,7 +322,8 @@
       "tribes": [
         "savu",
         "savu",
-        "dina"
+        "dina",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -342,7 +344,8 @@
       "tribes": [
         "toka",
         "toka",
-        "dina"
+        "dina",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -363,7 +366,8 @@
       "tribes": [
         "toka",
         "toka",
-        "savu"
+        "savu",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -384,7 +388,8 @@
       "tribes": [
         "savu",
         "savu",
-        "dina"
+        "dina",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -405,7 +410,8 @@
       "tribes": [
         "toka",
         "toka",
-        "savu"
+        "savu",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -426,7 +432,8 @@
       "tribes": [
         "savu",
         "savu",
-        "toka"
+        "toka",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -447,7 +454,8 @@
       "tribes": [
         "toka",
         "toka",
-        "dina"
+        "dina",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -468,7 +476,8 @@
       "tribes": [
         "toka",
         "toka",
-        "toka"
+        "toka",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -489,7 +498,8 @@
       "tribes": [
         "toka",
         "toka",
-        "toka"
+        "toka",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -510,7 +520,8 @@
       "tribes": [
         "savu",
         "savu",
-        "dina"
+        "dina",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -531,7 +542,8 @@
       "tribes": [
         "toka",
         "toka",
-        "toka"
+        "toka",
+        "tovuto"
       ],
       "finish": null,
       "exitEp": null,
@@ -574,5 +586,5 @@
       "lostEp": 6
     }
   ],
-  "updatedAt": "2026-11-05T11:51:18.882Z"
+  "updatedAt": "2026-11-09T15:21:17.948Z"
 }
