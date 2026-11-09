@@ -35,7 +35,13 @@
       "castaway": "Sharonda Cox",
       "name": "Tethered Idol",
       "foundEp": 7,
-      "lostEp": null
+      "lostEp": null,
+      "notes": [
+        {
+          "ep": 7,
+          "text": "Kristin gave Sharonda the Tethered Idol as a sign of trust. However, Sharonda cannot play the idol herself, as Kristin is the only person who can play it."
+        }
+      ]
     }
   ]
 }

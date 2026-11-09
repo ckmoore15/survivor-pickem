@@ -107,6 +107,37 @@
   const advIcon = name => ADV_ICONS.find(([re]) => re.test(name))[1];
   const advChip = a => `<span class="chip adv">${advIcon(a.name)} ${esc(a.name)}</span>`;
 
+  // Spoiler-free "how it works" blurbs by advantage type (first match wins).
+  const ADV_INFO = [
+    [/tethered/i, 'An idol linked to another castaway. Whoever it is tethered to decides when it gets played.'],
+    [/idol/i, "Played at Tribal Council after the votes are cast. Any votes against the person it protects don't count."],
+    [/extra vote/i, 'Lets the holder vote twice at a Tribal Council.'],
+    [/steal a vote/i, "Takes another player's vote at Tribal Council and casts it for the holder."],
+    [/block a vote/i, 'Stops another player from voting at Tribal Council.'],
+    [/knowledge/i, 'Ask another player for a specific advantage. If they have it, they must hand it over.'],
+    [/safety without power/i, 'Lets the holder leave Tribal Council before the vote, giving up their own vote.'],
+    [/shot in the dark/i, 'Give up your vote for a 1-in-6 chance at safety.'],
+    [/amulet/i, 'Shared between a few castaways. It gets more powerful as fewer of them are left.'],
+  ];
+  const advInfo = name => (ADV_INFO.find(([re]) => re.test(name)) || [])[1] || '';
+  const advShort = name => name.replace(/hidden immunity idol/i, 'Idol');
+  // Latest wiki note on an advantage that was known by episode n.
+  const advNote = (a, n) => (a.notes || []).filter(x => x.ep <= n).pop()?.text || '';
+
+  function advDetail(a, n) {
+    const gone = a.lostEp != null && a.lostEp <= n;
+    const held = (gone ? a.lostEp : n) - a.foundEp;
+    const when = gone
+      ? `Found Ep ${a.foundEp} · gone Ep ${a.lostEp}`
+      : `Found Ep ${a.foundEp}${held > 0 ? ` · held ${plural(held, 'episode')}` : ' · new this episode'}`;
+    const note = gone ? '' : advNote(a, n);
+    return `<li class="adv-item ${gone ? 'gone' : ''}">
+      <div class="adv-head"><span class="adv-icon">${advIcon(a.name)}</span><b>${esc(a.name)}</b>
+        <span class="adv-when">${gone ? '' : '<span class="adv-live">Active</span> '}${esc(when)}</span></div>
+      ${gone ? '' : `${advInfo(a.name) ? `<p>${esc(advInfo(a.name))}</p>` : ''}${note ? `<p class="adv-note">📝 ${esc(note)}</p>` : ''}`}
+    </li>`;
+  }
+
   function statusChip(c, n) {
     if (!isOut(c, n)) return '<span class="chip status-in">🔥 Still in</span>';
     if (c.winner) return '<span class="chip adv">👑 Sole Survivor</span>';
@@ -166,7 +197,8 @@
         <tbody>${cast.map(c => `
           <tr class="${isOut(c, n) ? 'is-out' : ''}">
             <td><div class="who">${avatar(c, n)}<div><strong>${esc(c.displayName)}</strong>
-              <small>${esc(tribe(tribeAt(c, n)).name)}${isOut(c, n) ? ` · out Ep ${c.exitEp}` : ''}</small></div></div></td>
+              <small>${esc(tribe(tribeAt(c, n)).name)}${isOut(c, n) ? ` · out Ep ${c.exitEp}` : ''}</small>
+              ${advantagesAt(c, n).map(a => `<span class="chip adv tag" title="${esc(a.name)}">${advIcon(a.name)} ${esc(advShort(a.name))}</span>`).join('')}</div></div></td>
             <td>${c.owner ? esc(c.owner) : '<span class="muted">Nobody</span>'}</td>
             <td class="num">${points(c, n).total}</td>
           </tr>`).join('')}
@@ -208,10 +240,9 @@
           <div class="label">Tribe${hist.length > 1 ? ' history' : ''}</div>
           <div class="chips">${hist.map(tribeChip).join('<span class="arrow">→</span>')}</div>
         </div>
-        ${now.length || past.length ? `<div><div class="label">Advantages</div><div class="chips">
-          ${now.map(advChip).join('')}
-          ${past.map(a => `<span class="chip ghost">${advIcon(a.name)} ${esc(a.name)} · gone Ep ${a.lostEp}</span>`).join('')}
-        </div></div>` : ''}
+        ${now.length || past.length ? `<div><div class="label">Advantages</div><ul class="adv-list">
+          ${[...now, ...past].map(a => advDetail(a, n)).join('')}
+        </ul></div>` : ''}
         ${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}
         ${c.words || c.fact ? `<details><summary>In their words</summary>
           ${c.words ? `<p><b>3 words:</b> ${esc(c.words)}</p>` : ''}

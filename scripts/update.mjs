@@ -85,6 +85,26 @@ function clean(s) {
     .trim();
 }
 
+// Pulls {{efn|...}} / {{note|...}} footnotes (with nested templates) out of a cell,
+// leaving a \0N\0 marker where note N was so it can be matched to its advantage.
+function takeTemplates(s, notes) {
+  let out = '';
+  for (let i = 0; i < s.length;) {
+    const m = s.slice(i).match(/^\{\{\s*(?:efn|note)\s*\|/i);
+    if (!m) { out += s[i++]; continue; }
+    let depth = 0, j = i;
+    for (; j < s.length; j++) {
+      if (s.startsWith('{{', j)) { depth++; j++; }
+      else if (s.startsWith('}}', j)) { depth--; j++; if (depth === 0) break; }
+    }
+    const body = s.slice(i + m[0].length, j - 1).replace(/^\s*(?:name|group)\s*=[^|]*\|/i, '');
+    out += `\u0000${notes.length}\u0000`;
+    notes.push(clean(body));
+    i = j + 1;
+  }
+  return out;
+}
+
 const slugify = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
   .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -137,15 +157,20 @@ function parseCastaways(wt) {
       // Advantages held: {{tribebox|yes|...}} (older wiki format) or {{ynbox|y|...}}.
       // Several advantages are separated by <br>; a <br> inside a link is just wrapping.
       if (/\{\{(?:tribebox\|yes|ynbox\|y)\|/i.test(cell)) {
-        const inner = cell
-          .replace(/\{\{(?:efn|note)\|[^{}]*\}\}/gi, '')
+        // Footnotes ({{efn|...}}) become notes on the advantage they follow.
+        const notes = [];
+        const inner = takeTemplates(cell, notes)
           .replace(/\{\{yn\|.\}\}/gi, '')
           .replace(/\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/g,
             (_, target, label) => (label ?? target).replace(/<br\s*\/?>/gi, ' '))
           .replace(/^.*?\{\{(?:tribebox\|yes|ynbox\|y)\|/i, '')
           .replace(/\}\}\s*$/, '');
-        c.advantages.push(...inner.split(/<br\s*\/?>/i).map(clean)
-          .filter(x => x && !/^(not )?safe$/i.test(x)));  // Shot in the Dark result, not an advantage
+        for (const part of inner.split(/<br\s*\/?>/i)) {
+          const ids = [...part.matchAll(/\u0000(\d+)\u0000/g)].map(m => Number(m[1]));
+          const name = clean(part.replace(/\u0000\d+\u0000/g, ''));
+          if (!name || /^(not )?safe$/i.test(name)) continue;  // Shot in the Dark result, not an advantage
+          c.advantages.push({ name, note: ids.map(i => notes[i]).join(' ') || null });
+        }
         continue;
       }
       const tribe = cell.match(/\{\{tribebox\|([a-z0-9 ]+)\}\}/i);
@@ -370,16 +395,25 @@ async function main() {
   }
 
   // Advantage log: open events for new advantages, close ones no longer on hand
+  // Wiki notes are kept with the episode they first appeared, so the "watched
+  // through" slider never shows a note written after a later episode.
+  const ep = Math.max(1, revealedThrough);
   for (const c of out) {
-    const current = c._advantages;
+    const held = c._advantages;
+    const current = held.map(a => a.name);
     delete c._advantages;
     const open = advLog.events.filter(e => e.castaway === c.name && e.lostEp == null);
     for (const name of new Set([...current, ...open.map(e => e.name)])) {
       const have = current.filter(a => a === name).length;
       const logged = open.filter(e => e.name === name);
       for (let i = logged.length; i < have; i++)
-        advLog.events.push({ castaway: c.name, name, foundEp: Math.max(1, revealedThrough), lostEp: null });
-      for (let i = have; i < logged.length; i++) logged[i].lostEp = Math.max(1, revealedThrough);
+        advLog.events.push({ castaway: c.name, name, foundEp: ep, lostEp: null });
+      for (let i = have; i < logged.length; i++) logged[i].lostEp = ep;
+    }
+    for (const a of held.filter(h => h.note)) {
+      const e = advLog.events.find(x => x.castaway === c.name && x.name === a.name && x.lostEp == null);
+      const last = e?.notes?.[e.notes.length - 1];
+      if (e && last?.text !== a.note) (e.notes ||= []).push({ ep, text: a.note });
     }
   }
 
