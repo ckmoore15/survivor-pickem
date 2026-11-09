@@ -134,13 +134,18 @@ function parseCastaways(wt) {
       advantages: [],
     };
     for (const cell of cells) {
-      if (/\{\{tribebox\|yes\|/i.test(cell)) {
+      // Advantages held: {{tribebox|yes|...}} (older wiki format) or {{ynbox|y|...}}.
+      // Several advantages are separated by <br>; a <br> inside a link is just wrapping.
+      if (/\{\{(?:tribebox\|yes|ynbox\|y)\|/i.test(cell)) {
         const inner = cell
+          .replace(/\{\{(?:efn|note)\|[^{}]*\}\}/gi, '')
           .replace(/\{\{yn\|.\}\}/gi, '')
-          .replace(/\[\[([^\]|]+)(?:\|[^\]]*)?\]\]/g, '$1')
-          .replace(/^.*?\{\{tribebox\|yes\|/i, '')
+          .replace(/\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/g,
+            (_, target, label) => (label ?? target).replace(/<br\s*\/?>/gi, ' '))
+          .replace(/^.*?\{\{(?:tribebox\|yes|ynbox\|y)\|/i, '')
           .replace(/\}\}\s*$/, '');
-        c.advantages.push(...inner.split(/<br\s*\/?>/i).map(clean).filter(Boolean));
+        c.advantages.push(...inner.split(/<br\s*\/?>/i).map(clean)
+          .filter(x => x && !/^(not )?safe$/i.test(x)));  // Shot in the Dark result, not an advantage
         continue;
       }
       const tribe = cell.match(/\{\{tribebox\|([a-z0-9 ]+)\}\}/i);

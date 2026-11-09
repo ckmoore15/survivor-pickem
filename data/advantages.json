@@ -5,7 +5,7 @@
       "castaway": "Devin Way",
       "name": "Extra Vote",
       "foundEp": 3,
-      "lostEp": 6
+      "lostEp": null
     },
     {
       "castaway": "Maggie Nestor",
@@ -23,13 +23,19 @@
       "castaway": "Carter Krull",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": 6
+      "lostEp": null
     },
     {
       "castaway": "Jelly Loblack",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": 6
+      "lostEp": null
+    },
+    {
+      "castaway": "Sharonda Cox",
+      "name": "Tethered Idol",
+      "foundEp": 7,
+      "lostEp": null
     }
   ]
 }
