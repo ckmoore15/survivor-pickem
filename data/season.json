@@ -286,9 +286,9 @@
         "toka",
         "tovuto"
       ],
-      "finish": "8th Voted Out Withdrew from Juryefn|After being voted out, Brady chose to leave the game rather than serve on the jury so he could seek medical treatment for his injured thumb. Day 14",
+      "finish": "8th Voted Out Withdrew from Jury Day 14",
       "exitEp": 7,
-      "jury": true,
+      "jury": false,
       "finalist": false,
       "winner": false,
       "words": "Enthusiastic, intense, fun",

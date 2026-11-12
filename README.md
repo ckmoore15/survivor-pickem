@@ -11,6 +11,8 @@ A GitHub Action (`.github/workflows/update.yml`) does the updating. GitHub start
 3. Between an episode airing and being published, it **writes nothing at all**, so new tribes and advantages can't leak early.
 4. Downloads castaway photos, records advantage history, then commits and deploys.
 
+**Jury check:** only someone with a numbered jury seat on the wiki ("1st Jury Member") gets the jury bonus. Someone who is voted out and then leaves or is removed from the jury ("Withdrew from Jury") does not. Each update also checks the jury for anything odd (a juror who left, seats that skip a number, someone whose jury status changed) and shows a ⚠️ warning on that run in the **Actions** tab. If the wiki ever gets it wrong, set `"jury": true` or `false` for that person under `castaways` in `overrides.json`.
+
 To update by hand: open **Actions → Update from wiki & deploy → Run workflow**. Pressing it any time on Wednesday also works as a head start: that run waits and posts the episode when it's ready.
 
 ## Files you might edit (all on github.com, in the `data/` folder)

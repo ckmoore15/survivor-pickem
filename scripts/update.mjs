@@ -19,6 +19,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { juryInfo, checkJury } from './jury.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -194,7 +195,9 @@ function parseCastaways(wt) {
         c.tribes.push(tribe[1].toLowerCase());
         continue;
       }
-      const text = clean(cell.replace(/^\|[^|{[]*\|(?!\|)/, '|').slice(1));
+      // Footnotes ({{efn|...}}) are dropped so they don't end up inside the finish text.
+      const text = clean(takeTemplates(cell.replace(/^\|[^|{[]*\|(?!\|)/, '|').slice(1), [])
+        .replace(/\u0000\d+\u0000/g, ''));
       if (!/\{\{tribebox\|no/i.test(cell) && FINISH_RE.test(text)) c.finish = text;
     }
     castaways.push(c);
@@ -422,7 +425,8 @@ async function main() {
       tribes: c.tribes,
       finish,
       exitEp,
-      jury: !!finish && /jury|juror/i.test(finish),
+      // Only a numbered jury seat counts; "Withdrew from Jury" etc. does not (see jury.mjs).
+      jury: juryInfo(finish).jury,
       finalist: !!finish && /sole survivor|runner/i.test(finish),
       winner: !!finish && /sole survivor/i.test(finish),
       words: c.words || '',
@@ -470,6 +474,15 @@ async function main() {
 
   const prev = await readJson('season.json', null);
   if (prev) delete prev.updatedAt;
+
+  // Jury guard: flag anything odd about who is (or stopped being) on the jury.
+  // Shows as a warning on the workflow run in GitHub's Actions tab.
+  const juryProblems = checkJury(out, prev?.castaways || []);
+  for (const msg of juryProblems)
+    console.warn(process.env.GITHUB_ACTIONS ? `::warning title=Jury check::${msg}` : `JURY CHECK: ${msg}`);
+  if (juryProblems.length && process.env.GITHUB_STEP_SUMMARY)
+    await fs.appendFile(process.env.GITHUB_STEP_SUMMARY,
+      `### ⚠️ Jury check\n${juryProblems.map(m => `- ${m}`).join('\n')}\n`);
   if (JSON.stringify(prev) === JSON.stringify(season)) {
     console.log('No changes.');
   } else {
