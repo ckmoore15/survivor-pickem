@@ -68,6 +68,10 @@
         "Kristin Flickinger",
         "Danny Kilby"
       ]
+    },
+    {
+      "num": 9,
+      "airDate": "2026-11-18"
     }
   ],
   "phases": [
@@ -603,5 +607,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-11-12T05:08:10.160Z"
+  "updatedAt": "2026-11-12T06:58:34.282Z"
 }
