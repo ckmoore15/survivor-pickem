@@ -3,13 +3,19 @@ name: Update from wiki & deploy
 on:
   schedule:
     # Times are UTC. Reveal is 9:30pm ET Wednesday = 01:30 UTC Thursday (02:30 in winter).
-    # GitHub often runs scheduled jobs late or skips them, so instead of polling with
-    # many short runs, these Wednesday-evening runs start early and *wait*, checking the
-    # wiki every 3 minutes until results are up. Extras are backups if one gets skipped.
-    - cron: '7 0-3 * * 4'     # Wed evening starters (7-10pm EST / 8-11pm EDT)
+    #
+    # GitHub runs scheduled jobs hours late or skips them entirely, so nothing here
+    # depends on a job starting at the right time. Instead, ANY run that starts within
+    # 18 hours before the reveal stays alive and waits for it (the "wait" job below),
+    # then checks the wiki every 3 minutes until results are up. A job can only live
+    # ~6 hours, so a waiting run that is about to time out starts its own replacement,
+    # which GitHub starts right away (only *scheduled* starts are unreliable).
+    # All these lines are just extra chances for a first run to start on Wednesday.
+    - cron: '30 11 * * *'       # daily catch-all (usually lands late morning Pacific)
+    - cron: '17 9-23/2 * * 3'   # Wednesday daytime starters
+    - cron: '7 0-3 * * 4'       # Wednesday evening starters (7-10pm EST / 8-11pm EDT)
     - cron: '37 0-3 * * 4'
-    - cron: '23 10-18/2 * * 4' # Thursday backups
-    - cron: '30 11 * * *'     # daily catch-all
+    - cron: '23 10-18/2 * * 4'  # Thursday backups
   workflow_dispatch:        # "Run workflow" button on the Actions tab
   push:
     branches: [main]
@@ -18,18 +24,18 @@ permissions:
   contents: write
   pages: write
   id-token: write
-
-concurrency:
-  group: update-and-deploy
-  cancel-in-progress: false
+  actions: write            # lets a waiting run start its replacement
 
 jobs:
-  update-and-deploy:
+  # Holds the run open until the next episode is revealed. Finishes in seconds when no
+  # episode is close. Skipped for pushes so edits to the site deploy right away.
+  wait:
+    if: github.event_name != 'push'
     runs-on: ubuntu-latest
-    timeout-minutes: 330
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 345
+    concurrency:
+      group: wait-for-reveal      # one waiter at a time; extras queue behind it
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
@@ -37,15 +43,38 @@ jobs:
         with:
           node-version: 20
 
-      - name: Pull latest season data from the wiki
+      - name: Wait for the episode to be revealed
+        id: wait
+        run: node scripts/update.mjs --wait-only --wait=320
+
+      - name: Out of time, start a replacement run
+        if: always() && steps.wait.outputs.relay == 'true'
         env:
-          SCHEDULE: ${{ github.event.schedule }}
-        run: |
-          # Wednesday-evening starters wait up to 5 hours for the wiki to post results.
-          case "$SCHEDULE" in
-            *"0-3 * * 4") node scripts/update.mjs --wait=300 ;;
-            *) node scripts/update.mjs ;;
-          esac
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update.yml --repo "$GITHUB_REPOSITORY" --ref main
+
+  update-and-deploy:
+    needs: wait
+    if: ${{ !cancelled() }}     # also runs when "wait" was skipped (pushes)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: update-and-deploy
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main               # latest data, even if this run started hours ago
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Pull latest season data from the wiki
+        run: node scripts/update.mjs
 
       - name: Commit data changes
         run: |

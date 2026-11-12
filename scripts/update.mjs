@@ -6,7 +6,15 @@
 // refuses to write anything, so the castaway table (tribes, advantages) can't
 // leak new information early.
 //
-// Usage: node scripts/update.mjs [--force] [--refresh-images] [--wait=MINUTES]
+// Usage: node scripts/update.mjs [--force] [--refresh-images] [--wait=MINUTES] [--wait-only]
+//
+// --wait=MINUTES   If an episode airs soon (within 18 hours) or has aired but isn't
+//                  revealed yet, stay alive until it is revealed, or until MINUTES
+//                  run out, instead of giving up right away.
+// --wait-only      Do the waiting but write nothing. The GitHub workflow uses this
+//                  for its "wait" job; when time runs out while an episode is still
+//                  pending it sets the output relay=true so the workflow can start
+//                  its own replacement run.
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -20,7 +28,10 @@ const UA = 'survivor-pickem-bot/1.0 (family pick em site)';
 const FORCE = process.argv.includes('--force') || process.env.FORCE === '1';
 const REFRESH_IMAGES = process.argv.includes('--refresh-images');
 const WAIT_MIN = Number((process.argv.find(a => a.startsWith('--wait=')) || '').slice(7)) || 0;
+const WAIT_ONLY = process.argv.includes('--wait-only');
 const POLL_MS = 3 * 60_000;
+const LEAD_MS = 18 * 3600_000;       // start waiting this long before the reveal
+const RELAY_CAP_MS = 12 * 3600_000;  // stop handing off this long after the reveal
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
   'August', 'September', 'October', 'November', 'December'];
 
@@ -44,6 +55,11 @@ const readJson = async (file, fallback) => {
 };
 const writeJson = (file, obj) =>
   fs.writeFile(path.join(DATA, file), JSON.stringify(obj, null, 2) + '\n');
+
+// Step output for the GitHub workflow (no-op when run locally).
+const setOutput = async (key, value) => {
+  if (process.env.GITHUB_OUTPUT) await fs.appendFile(process.env.GITHUB_OUTPUT, `${key}=${value}\n`);
+};
 
 async function api(params) {
   const url = API + '?' + new URLSearchParams({ format: 'json', formatversion: '2', ...params });
@@ -273,6 +289,7 @@ async function fetchSeason(config, overrides) {
   const reveal = config.reveal || { timeZone: 'America/New_York', time: '21:30' };
   let revealedThrough = 0;
   let blackout = null;
+  let upcoming = null;
   for (const ep of episodes.sort((a, b) => a.num - b.num)) {
     if (!ep.airDate) break;
     const [y, m, d] = ep.airDate.split('-').map(Number);
@@ -287,11 +304,11 @@ async function fetchSeason(config, overrides) {
     const fromWiki = ep.exits.length > 0 && (tableReady || now >= ep.revealAt + 2 * 3600_000);
     const confirmed = fromWiki || confirm.has(ep.num) || manualExitEps.has(ep.num);
     if (now >= ep.revealAt && confirmed) { revealedThrough = ep.num; continue; }
-    if (now >= ep.airStart) blackout = ep;
+    if (now >= ep.airStart) blackout = ep; else upcoming = ep;
     break;
   }
   if (overrides.holdBackAfter != null) revealedThrough = Math.min(revealedThrough, overrides.holdBackAfter);
-  return { phases, castaways, episodes, revealedThrough, blackout };
+  return { phases, castaways, episodes, revealedThrough, blackout, upcoming };
 }
 
 async function main() {
@@ -301,21 +318,42 @@ async function main() {
   const phaseStarts = await readJson('phases.json', {});
   const advLog = await readJson('advantages.json', { events: [] });
 
-  // --wait=MINUTES: if an episode has aired but isn't revealed yet, keep checking
-  // the wiki until it is (or time runs out) instead of giving up right away.
+  // --wait=MINUTES: if an episode airs soon, or has aired but isn't revealed yet,
+  // keep checking the wiki until it is (or time runs out) instead of giving up.
   const waitDeadline = Date.now() + WAIT_MIN * 60_000;
   let snap;
   for (;;) {
-    snap = await fetchSeason(config, overrides);
-    const b = snap.blackout;
-    if (!b || FORCE) break;
-    const msg = `Episode ${b.num} has aired but isn't revealed yet (reveal ${new Date(b.revealAt).toISOString()}, wiki exits: ${b.exits.join(', ') || 'none yet'}).`;
+    try {
+      snap = await fetchSeason(config, overrides);
+    } catch (err) {
+      // While waiting, one bad wiki response shouldn't end the whole run.
+      if (!WAIT_MIN || Date.now() + POLL_MS > waitDeadline) throw err;
+      console.warn(`${err.message}. Trying again in 3 minutes.`);
+      await sleep(POLL_MS);
+      continue;
+    }
     const nowMs = Date.now();
+    const soon = WAIT_MIN && snap.upcoming && snap.upcoming.revealAt - nowMs <= LEAD_MS ? snap.upcoming : null;
+    const b = snap.blackout || soon;
+    if (!b || FORCE) break;
+    const msg = snap.blackout
+      ? `Episode ${b.num} has aired but isn't revealed yet (reveal ${new Date(b.revealAt).toISOString()}, wiki exits: ${b.exits.join(', ') || 'none yet'}).`
+      : `Episode ${b.num} airs soon (reveal ${new Date(b.revealAt).toISOString()}).`;
     const next = nowMs < b.revealAt ? b.revealAt + 30_000 : nowMs + POLL_MS;
-    if (next > waitDeadline) { console.log(`${msg} Not writing anything.`); return; }
+    if (next > waitDeadline) {
+      if (!WAIT_MIN) { console.log(`${msg} Not writing anything.`); return; }
+      // Out of time. Use up what's left, then ask the workflow to start a
+      // replacement run, unless the wiki is so late the daily run should take over.
+      if (waitDeadline > nowMs) await sleep(waitDeadline - nowMs);
+      const relay = Date.now() < b.revealAt + RELAY_CAP_MS;
+      console.log(`${msg} Out of waiting time. ${relay ? 'Handing off to a new run.' : 'Leaving it to the next scheduled run.'}`);
+      if (relay) await setOutput('relay', 'true');
+      return;
+    }
     console.log(`${msg} Checking again at ${new Date(next).toISOString()}.`);
     await sleep(next - nowMs);
   }
+  if (WAIT_ONLY) { console.log('Nothing to wait for.'); return; }
   const { phases, castaways, episodes, revealedThrough } = snap;
   const now = Date.now();
   console.log(`Revealed through episode ${revealedThrough}`);
