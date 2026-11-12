@@ -29,13 +29,13 @@
       "castaway": "Jelly Loblack",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": null
+      "lostEp": 8
     },
     {
       "castaway": "Sharonda Cox",
       "name": "Tethered Idol",
       "foundEp": 7,
-      "lostEp": null,
+      "lostEp": 8,
       "notes": [
         {
           "ep": 7,

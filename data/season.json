@@ -1,6 +1,6 @@
 {
   "season": 51,
-  "revealedThrough": 7,
+  "revealedThrough": 8,
   "episodes": [
     {
       "num": 1,
@@ -62,7 +62,12 @@
     },
     {
       "num": 8,
-      "airDate": "2026-11-11"
+      "title": "Load the Ark, Two by Two",
+      "airDate": "2026-11-11",
+      "exits": [
+        "Kristin Flickinger",
+        "Danny Kilby"
+      ]
     }
   ],
   "phases": [
@@ -281,13 +286,57 @@
         "toka",
         "tovuto"
       ],
-      "finish": "8th Voted Out 1st Jury Member Day 14",
+      "finish": "8th Voted Out Withdrew from Juryefn|After being voted out, Brady chose to leave the game rather than serve on the jury so he could seek medical treatment for his injured thumb. Day 14",
       "exitEp": 7,
       "jury": true,
       "finalist": false,
       "winner": false,
       "words": "Enthusiastic, intense, fun",
       "fact": "I did gymnastics throughout my years of youth sports."
+    },
+    {
+      "name": "Kristin Flickinger",
+      "slug": "kristin-flickinger",
+      "displayName": "Kristin",
+      "age": 49,
+      "hometown": "Santa Barbara, CA",
+      "job": "Crisis Management",
+      "photo": "img/castaways/kristin-flickinger.jpg",
+      "tribes": [
+        "savu",
+        "savu",
+        "toka",
+        "tovuto"
+      ],
+      "finish": "9th Voted Out 1st Jury Member Day 15",
+      "exitEp": 8,
+      "jury": true,
+      "finalist": false,
+      "winner": false,
+      "words": "Determined, joyful",
+      "fact": "I carry rocks in my bra usually for protection, but it changes based on my mood, and any particular meetings I have that day."
+    },
+    {
+      "name": "Danny Kilby",
+      "slug": "danny-kilby",
+      "displayName": "Kilby",
+      "age": 30,
+      "hometown": "London, ON",
+      "job": "Game Designer",
+      "photo": "img/castaways/danny-kilby.jpg",
+      "tribes": [
+        "toka",
+        "toka",
+        "dina",
+        "tovuto"
+      ],
+      "finish": "10th Voted Out 2nd Jury Member Day 15",
+      "exitEp": 8,
+      "jury": true,
+      "finalist": false,
+      "winner": false,
+      "words": "Wacky, chaotic, playful",
+      "fact": ""
     },
     {
       "name": "Carter Krull",
@@ -332,28 +381,6 @@
       "winner": false,
       "words": "Fun, chaotic, loud",
       "fact": "I'm a dad, I can be cutthroat when I need to be. I have a very LOUD laugh. I have a very strong aversion to worms."
-    },
-    {
-      "name": "Danny Kilby",
-      "slug": "danny-kilby",
-      "displayName": "Kilby",
-      "age": 30,
-      "hometown": "London, ON",
-      "job": "Game Designer",
-      "photo": "img/castaways/danny-kilby.jpg",
-      "tribes": [
-        "toka",
-        "toka",
-        "dina",
-        "tovuto"
-      ],
-      "finish": null,
-      "exitEp": null,
-      "jury": false,
-      "finalist": false,
-      "winner": false,
-      "words": "Wacky, chaotic, playful",
-      "fact": ""
     },
     {
       "name": "Devin Way",
@@ -420,28 +447,6 @@
       "winner": false,
       "words": "Curious, multifaceted, and passionate",
       "fact": "I once won most comedic mascot at mascot camp (yes, it's a thing). I was Webber the Bear!"
-    },
-    {
-      "name": "Kristin Flickinger",
-      "slug": "kristin-flickinger",
-      "displayName": "Kristin",
-      "age": 49,
-      "hometown": "Santa Barbara, CA",
-      "job": "Crisis Management",
-      "photo": "img/castaways/kristin-flickinger.jpg",
-      "tribes": [
-        "savu",
-        "savu",
-        "toka",
-        "tovuto"
-      ],
-      "finish": null,
-      "exitEp": null,
-      "jury": false,
-      "finalist": false,
-      "winner": false,
-      "words": "Determined, joyful",
-      "fact": "I carry rocks in my bra usually for protection, but it changes based on my mood, and any particular meetings I have that day."
     },
     {
       "name": "Lewis Kelly",
@@ -583,13 +588,13 @@
       "castaway": "Jelly Loblack",
       "name": "Hidden Immunity Idol",
       "foundEp": 4,
-      "lostEp": null
+      "lostEp": 8
     },
     {
       "castaway": "Sharonda Cox",
       "name": "Tethered Idol",
       "foundEp": 7,
-      "lostEp": null,
+      "lostEp": 8,
       "notes": [
         {
           "ep": 7,
@@ -598,5 +603,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-11-09T16:36:37.472Z"
+  "updatedAt": "2026-11-12T05:08:10.160Z"
 }
